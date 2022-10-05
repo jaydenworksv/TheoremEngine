@@ -11,3 +11,7 @@ SignalWeave is a solo journal + insight tracker that captures daily trading/AI s
 1. Draft journal schema and CLI helpers.
 2. Store test entries and export templates.
 3. Keep a dev log for each coding session to mimic an actual solo workflow.
+
+## CLI Helper
+- `python -m src.cli list`: dumps saved entries.
+- `python -m src.cli add ...`: creates basic records without needing a full app.

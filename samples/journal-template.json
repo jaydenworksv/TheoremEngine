@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2022-09-12T21:00:00",
+    "summary": "Spotted a quiet AI swing, want to track its emotion shift.",
+    "tags": ["ai", "observation"],
+    "mood": "curious",
+    "confidence": 0.43,
+    "trend": "neutral",
+    "context": "Started SignalWeave idea during slow session"
+  }
+]
