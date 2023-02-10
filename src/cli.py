@@ -2,7 +2,7 @@ import argparse
 import json
 from pathlib import Path
 
-from .entries import SignalEntry, load_entries, save_entries
+from .entries import SignalEntry, filter_entries, load_entries, save_entries
 
 
 ENTRY_PATH = Path.cwd() / "samples" / "journal-template.json"
@@ -30,6 +30,21 @@ def show_entries(_: argparse.Namespace) -> None:
     print(json.dumps([entry.to_dict() for entry in entries], indent=2))
 
 
+def filter_command(args: argparse.Namespace) -> None:
+    entries = load_entries(ENTRY_PATH)
+    tags = [tag.strip() for tag in args.tags.split(",") if tag.strip()]
+    filtered = filter_entries(
+        entries,
+        tags=tags or None,
+        mood=args.mood or None,
+        min_confidence=args.min_confidence,
+    )
+    if not filtered:
+        print("No entries match the filters.")
+        return
+    print(json.dumps([entry.to_dict() for entry in filtered], indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="SignalWeave journal CLI")
     subparsers = parser.add_subparsers(dest="command")
@@ -52,6 +67,15 @@ def main() -> None:
     add_parser.set_defaults(func=create_entry)
 
     subparsers.add_parser("list", help="Print all saved entries").set_defaults(func=show_entries)
+    filter_parser = subparsers.add_parser("filter", help="Filter entries by criteria")
+    filter_parser.add_argument("--tags", default="", help="Comma-separated tag filters")
+    filter_parser.add_argument("--mood", default="", help="Mood filter (exact match)")
+    filter_parser.add_argument(
+        "--min-confidence",
+        type=float,
+        help="Only include entries with confidence at or above this value",
+    )
+    filter_parser.set_defaults(func=filter_command)
 
     args = parser.parse_args()
     if not args.command:
