@@ -1,8 +1,10 @@
 import argparse
+import argparse
 import json
 from pathlib import Path
 
 from .entries import SignalEntry, filter_entries, load_entries, save_entries
+from .templates import build_entry, list_templates
 
 
 ENTRY_PATH = Path.cwd() / "samples" / "journal-template.json"
@@ -76,12 +78,36 @@ def main() -> None:
         help="Only include entries with confidence at or above this value",
     )
     filter_parser.set_defaults(func=filter_command)
+    template_parser = subparsers.add_parser("template", help="Create entry from a template")
+    template_parser.add_argument(
+        "--name",
+        choices=list_templates(),
+        required=True,
+        help="Template to use for the new entry",
+    )
+    template_parser.add_argument("--timestamp", required=True, help="ISO timestamp")
+    template_parser.add_argument("--mood", default="reflective", help="Mood tag")
+    template_parser.add_argument(
+        "--confidence",
+        type=float,
+        default=0.55,
+        help="Confidence score for the template entry",
+    )
+    template_parser.set_defaults(func=template_command)
 
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
         return
     args.func(args)
+
+
+def template_command(args: argparse.Namespace) -> None:
+    entries = load_entries(ENTRY_PATH)
+    entry = build_entry(args.name, args.timestamp, args.mood, args.confidence)
+    entries.append(entry)
+    save_entries(ENTRY_PATH, entries)
+    print(f"Added entry from template {args.name}")
 
 
 if __name__ == "__main__":
