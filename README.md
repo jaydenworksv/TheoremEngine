@@ -24,9 +24,3 @@ SignalWeave is a solo journal + insight tracker that captures daily trading/AI s
 - `python -m src.moodboard`: prints the current mood counts so the journal feels personal.
 ## Templates
 - `python -m src.templates`: lists the standard templates for jotting down ideas fast.
-- `python -m src.cli list`: dumps saved entries.
-- `python -m src.cli add ...`: creates basic records without needing a full app.
-- `python -m src.cli filter --tags ai`: limits output so you can review subsets.
-- `python -m src.reports`: prints a quick summary of moods/tags based on `samples/journal-template.json`.
-- `python -m src.exporter`: generates a markdown digest and prints a timestamped brief.
-- `python -m src.timeline`: tells you how much time passed between recent entries to keep the solo cadence honest.
